@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5 flex-grow-1">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Hi, {{ user.full_name.split()[0] }}!</h1>
+            <p class="lead">Access your account information, manage transactions, and explore our services.</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Account Balance -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Account Balance</h3>
+                    <p class="card-text">Your current balance is: <strong>PLN {{ user.balance }}</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Recent Transactions</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for transaction in recent_transactions %}
+                            <li class="list-group-item">
+                                {% if transaction.sender_id == user.id %}
+                                    <span class="text-danger">Sent to {{ transaction.recipient.full_name }} - PLN {{ transaction.amount }}</span>
+                                {% else %}
+                                    <span class="text-success">Received from {{ transaction.sender.full_name }} - PLN {{ transaction.amount }}</span>
+                                {% endif %}
+                                <small class="d-block text-muted">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{{ url_for('user.transactions') }}" class="btn btn-primary btn-block mt-3">View All Transactions</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transfer Money -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center">Transfer Money</h3>
+                    <form action="{{ url_for('user.transfer') }}" method="POST">
+                        <div class="form-group">
+                            <label for="recipient_email">Recipient's Email</label>
+                            <input type="email" class="form-control" id="recipient_email" name="recipient_email" placeholder="Enter recipient's email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount (PLN)</label>
+                            <input type="number" step="0.01" class="form-control" id="amount" name="amount" placeholder="Enter amount" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Transfer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Update Personal Details -->
+        <div class="col-md-4 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center">Update Personal Details</h3>
+                    <form action="{{ url_for('user.update') }}" method="POST">
+                        <div class="form-group">
+                            <label for="full_name">Full Name</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ user.full_name }}" placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}" placeholder="Enter address">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number</label>
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number }}" placeholder="Enter phone number">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
