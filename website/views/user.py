@@ -42,6 +42,7 @@ def update():
                 user.phone_number = request.form['phone_number']
 
             try:
+                session['email'] = request.form['email']
                 db.session.commit()
                 flash("Your details have been updated successfully!", "success")
             except Exception as e:
