@@ -88,17 +88,17 @@ project-root/
 
 ### Using Docker
 
-1. Build the Docker image:
+1. Pull docker image:
    ```
-   docker build -t project_name .
+   docker pull mlchals/bank-app:latest
    ```
 
 2. Run the Docker container:
    ```
-   docker run -d -p 5000:5000 project_name
+   docker run -pd 8000:8000 mlchals/bank-app:latest
    ```
 
-3. Access the application at `http://localhost:5000`.
+3. Access the application at `http://localhost:8000`.
 
 ### Using Git Clone
 
